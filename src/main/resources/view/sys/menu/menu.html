@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <script th:replace="common/head::static"></script>
+        <link th:href="@{/sys/menu/css/menu.css}" rel="stylesheet" type="text/css"/>
+    </head>
+    <body>
+        <div class="layui-row layui-col-space15">
+            <div class="layui-col-md4">
+                <div class="layui-card">
+                    <div class="layui-card-header">Menu Tree</div>
+                    <div class="layui-card-body">
+                        <div id="menuTree" class="demo-tree demo-tree-box"
+                             style="height: 450px; overflow: scroll;"></div>
+                    </div>
+                </div>
+            </div>
+            <!-- Action Form -->
+            <div class="layui-col-md8">
+                <div class="layui-card">
+                    <div class="layui-card-header">Action form</div>
+                    <div class="layui-card-body">
+                        <form id="menuForm" class="layui-form layui-form-pane">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">Parent Menu</label>
+                                <div class="layui-input-block">
+                                    <input type="text" name="menuParentName" autocomplete="off" placeholder="Parent Menu"
+                                           class="layui-input" readonly="readonly" disabled="disabled">
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">Menu Name</label>
+                                <div class="layui-input-block">
+                                    <input type="text" name="menuName" autocomplete="off" placeholder="Menu Name"
+                                           class="layui-input">
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">Menu Path</label>
+                                <div class="layui-input-block">
+                                    <input type="text" name="menuPath" autocomplete="off" placeholder="Menu Path"
+                                           class="layui-input">
+                                </div>
+                            </div>
+                            <!-- hidden -->
+                            <input type="text" name="menuId" hidden="hidden"/>
+                            <input type="text" name="menuParentId" hidden="hidden"/>
+                            <input type="text" name="createTime" hidden="hidden"/>
+                            <input type="text" name="updateTime" hidden="hidden"/>
+                            <!-- treeId，to update HTML-->
+                            <input type="text" name="treeId" hidden="hidden"/>
+
+                            <div class="layui-form-item">
+                                <div class="layui-input-block">
+                                    <a class="layui-btn" onclick="menuFormSave()">Save</a>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+    <!-- js -->
+    <script th:src="@{/sys/menu/js/menu.js}"></script>
+</html>

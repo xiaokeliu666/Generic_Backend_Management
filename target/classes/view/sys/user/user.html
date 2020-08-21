@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+
+    <script th:replace="common/head::static"></script>
+
+    <link th:href="@{/sys/user/css/user.css}" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+<div class="layui-row layui-col-space15">
+    <!-- Tree -->
+    <div class="layui-col-md6">
+        <div class="layui-card">
+            <div class="layui-card-header">User List</div>
+            <div class="layui-card-body">
+                <!-- Form -->
+                <table class="layui-hide" id="userTable" lay-filter="test"></table>
+                <!-- Template -->
+                <script type="text/html" id="userTableToolbarDemo">
+                    <div class="layui-btn-container">
+                        <button class="layui-btn layui-btn-sm" lay-event="addData">Add<i class="layui-icon layui-icon-add-1"></i></button>
+                        <input type="text" id="queryByLoginName" name="queryByLoginName" autocomplete="off"
+                               placeholder="Input account" class="layui-input layui-btn-sm">
+                        <button class="layui-btn layui-btn-sm" lay-event="query">Query<i class="layui-icon layui-icon-search"></i></button>
+                    </div>
+                </script>
+                <script type="text/html" id="userTableBarDemo">
+                    <a class="layui-btn layui-btn-xs" lay-event="edit">Edit<i class="layui-icon layui-icon-edit"></i></a>
+                    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">Delete<i class="layui-icon layui-icon-close"></i></a>
+                </script>
+            </div>
+        </div>
+        <div class="layui-card">
+            <div class="layui-card-header">Current Online Users</div>
+            <div class="layui-card-body">
+                <!-- Form -->
+                <table class="layui-hide" id="userOnLineTable" lay-filter="test"></table>
+                <!-- Template -->
+                <script type="text/html" id="userOnLineTableToolbarDemo">
+                    <div class="layui-btn-container">
+                        <button class="layui-btn layui-btn-sm" lay-event="reload">Refresh</button>
+                    </div>
+                </script>
+                <script type="text/html" id="userOnLineTableBarDemo">
+                    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="forced">
+                        Forced offline<i class="layui-icon layui-icon-close"></i></a>
+                </script>
+            </div>
+        </div>
+    </div>
+    <!-- Action Form -->
+    <div class="layui-col-md6">
+        <div class="layui-card">
+            <div class="layui-card-header">Action Form</div>
+            <div class="layui-card-body">
+                <form id="userForm" class="layui-form layui-form-pane">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">User Name</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="userName" autocomplete="off" placeholder="User Name"
+                                   class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">Login Name</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="loginName" autocomplete="off" placeholder="Login Name"
+                                   class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">Password</label>
+                        <div class="layui-input-block">
+                            <a class="layui-btn layui-btn-sm" onclick="resetPassword()">Reset Password</a>
+                            <div class="layui-form-mid layui-word-aux" style="float: unset; margin-left: 10px;">
+                                Rest Password:<span th:text="${initPassword}"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">Soft Delete</label>
+                        <div class="layui-input-block">
+                            <input type="radio" name="valid" value="Y" title="On">
+                            <input type="radio" name="valid" value="N" title="Off">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">Multiple online</label>
+                        <div class="layui-input-block">
+                            <input type="radio" name="limitMultiLogin" value="Y" title="On">
+                            <input type="radio" name="limitMultiLogin" value="N" title="Off">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">Banned IP</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="limitedIp" autocomplete="off" placeholder="Banned IP(use comma to separate)"
+                                   class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <div class="layui-inline">
+                            <label class="layui-form-label">Account expired date</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="expiredTime" id="expiredTimeDate" autocomplete="off"
+                                       class="layui-input">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <div class="layui-inline">
+                            <label class="layui-form-label">Last change password</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="lastChangePwdTime" autocomplete="off" class="layui-input"
+                                       readonly="readonly">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">Create Time</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="createTime" autocomplete="off" placeholder="Create Time"
+                                   class="layui-input" readonly="readonly">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">Update Time</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="updateTime" autocomplete="off" placeholder="Update Time"
+                                   class="layui-input" readonly="readonly" disabled="disabled">
+                        </div>
+                    </div>
+
+                    <!-- hidden -->
+                    <input type="text" name="userId" hidden="hidden"/>
+                </form>
+
+                <div class="layui-form-item">
+                    <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+                        <legend>User Menu</legend>
+                    </fieldset>
+                    <div id="userMenuTree" class="demo-tree demo-tree-box layui-col-md6"
+                         style="height: 300px; overflow: scroll;"></div>
+                </div>
+                <div class="layui-form-item">
+                    <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+                        <legend>User Authority</legend>
+                    </fieldset>
+                    <div id="userAuthorityTree" class="demo-tree demo-tree-box layui-col-md6"
+                         style="height: 300px; overflow: scroll;"></div>
+                </div>
+
+                <div class="layui-form-item">
+                    <div class="layui-input-block">
+                        <a class="layui-btn" onclick="userFormSave()">Save</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+<!-- js -->
+<script th:src="@{/sys/user/js/user.js}"></script>
+</html>

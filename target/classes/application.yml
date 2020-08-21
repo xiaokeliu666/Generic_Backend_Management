@@ -1,0 +1,65 @@
+##### Public configuration #######
+
+# Build-in Tomcat configuration
+server:
+  port: 8888
+
+# Basic configuration
+spring:
+  profiles:
+    active: ${BASE_ADMIN:dev}
+  application:
+    name: base-admin
+
+  #thymeleaf root
+  thymeleaf:
+    prefix: classpath:/view/
+
+  #mvc date format
+  mvc:
+    date-format: yyyy-MM-dd HH:mm:ss
+
+  #jackson date format
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: EST
+
+
+  jpa:
+    show-sql: true
+
+
+captcha:
+  enable: true
+
+---
+##### dev  #######
+spring:
+  profiles: dev
+
+  # database
+  datasource:
+    url: jdbc:mysql://localhost:3306/base_admin?serverTimezone=UTC&characterEncoding=utf-8
+    username: root
+    password: pwd
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+
+captcha:
+  enable: true
+
+---
+##### prod configuration #######
+spring:
+  profiles: prod
+
+  # database
+  datasource:
+    url: jdbc:mysql://localhost:3306/base_admin?serverTimezone=UTC&characterEncoding=utf-8
+    username: root
+    password: pwd
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+# whether captcha is needed
+captcha:
+  enable: true

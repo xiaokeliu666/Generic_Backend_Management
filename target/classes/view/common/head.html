@@ -1,0 +1,33 @@
+<!--Page share（fragment）-->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:fragment="static">
+    <!-- thymeleaf-js-->
+    <head>
+        <script th:inline="javascript">
+            // project root
+            // ctx = /*[[@{/}]]*/'';
+            ctx = [[${#request.getContextPath()}]];// application root
+        </script>
+    </head>
+
+    <!-- import lib -->
+    <head>
+        <!-- Jquery -->
+        <script th:src="@{/common/jquery/jquery.js}"></script>
+
+        <!-- Layui -->
+        <link th:href="@{/common/layui/css/layui.css}" rel="stylesheet" type="text/css"/>
+        <script th:src="@{/common/layui/layui.js}"></script>
+
+        <!--CryptoJS jsencrypt -->
+        <script th:src="@{/common/encrypt/cryptojs.js}"></script>
+        <script th:src="@{/common/encrypt/jsencrypt.js}"></script>
+    </head>
+
+    <!-- common.js、common.css -->
+    <head>
+        <link th:href="@{/common/common.css}" rel="stylesheet" type="text/css"/>
+        <script th:src="@{/common/common.js}"></script>
+    </head>
+</html>

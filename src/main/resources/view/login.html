@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${sys.sysName} + '  Login'"></title>
+    <link rel="shortcut icon" th:href='${sys.sysLogo}' th:mce_href='${sys.sysLogo}' type="image/x-icon">
+    <script th:replace="common/head::static"></script>
+    <style>
+        .main {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 150px;
+        }
+    </style>
+</head>
+<body>
+<div class="main">
+    <form class="layui-form layui-form-pane">
+        <div class="layui-form-item">
+            <h1 style="text-align: center" th:text="${sys.sysName}">XXX System</h1>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">Account<i class="layui-icon layui-icon-username"></i></label>
+            <div class="layui-input-block">
+                <input type="text" id="username" name="username" placeholder="Account" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">Password<i class="layui-icon layui-icon-password"></i></label>
+            <div class="layui-input-block">
+                <input type="password" id="password" name="password" placeholder="Password" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">Captcha</label>
+            <div class="layui-input-inline">
+                <input type="text" id="captcha" name="captcha" placeholder="Captcha" class="layui-input" style="float: left;width: 52%">
+                <img id="captchaImg" th:src="@{/getVerifyCodeImage}" onclick="changeCode()"/>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <input id="remember-me" type="checkbox" name="remember-me" value="true" style="display: none">
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <a class="layui-btn" style="margin-left: -50px;margin-right: 50px;" onclick="formSubmit()">Login</a>
+                <button type="reset" class="layui-btn layui-btn-primary">Reset</button>
+            </div>
+        </div>
+    </form>
+</div>
+</body>
+<script th:inline="javascript">
+    //  get backend RSA public key
+    sessionStorage.setItem('javaPublicKey', [[${publicKey}]]);
+
+    // get API (ON/OFF)
+    sessionStorage.setItem('sysApiEncrypt', [[${sys.sysApiEncrypt}]]);
+
+    function formSubmit() {
+        $.post(ctx + "/login", {
+            "username": $("#username").val(),
+            "password": $("#password").val(),
+            "captcha": $("#captcha").val(),
+            "remember-me": $("#remember-me").val(),
+        }, function (data) {
+            layui.use('layer', function () {
+                var layer = layui.layer;
+                if (data.code == 300) {
+                    layer.msg(data.msg, {icon: 1,time: 1000}, function () {
+                        window.location.href = ctx + data.url;
+                    });
+                } else {
+                    layer.msg(data.msg, {icon: 2,time: 2000}, function () {});
+                }
+            });
+        })
+    }
+
+    function changeCode() {
+        var img = document.getElementById("captchaImg");
+        img.src = ctx + "/getVerifyCodeImage?time=" + new Date().getTime();
+    }
+</script>
+</html>
