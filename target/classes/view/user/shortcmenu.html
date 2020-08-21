@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+
+    <script th:replace="common/head::static"></script>
+
+    <link th:href="@{/user/css/shortcutmenu.css}" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+<div class="layui-row layui-col-space15">
+    <!-- Tree -->
+    <div class="layui-col-md4">
+        <div class="layui-card">
+            <div class="layui-card-header">Customized Tree</div>
+            <div class="layui-card-body">
+                <div id="shortcutMenuTree" class="demo-tree demo-tree-box"
+                     style="height: 450px; overflow: scroll;"></div>
+            </div>
+        </div>
+    </div>
+    <!-- Operation form -->
+    <div class="layui-col-md8">
+        <div class="layui-card">
+            <div class="layui-card-header">Operation form</div>
+            <div class="layui-card-body">
+                <form id="shortcutMenuForm" class="layui-form layui-form-pane">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">Superior Node</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="shortcutMenuParentName" autocomplete="off" placeholder="Superior Node"
+                                   class="layui-input" readonly="readonly" disabled="disabled">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">Menu Name</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="shortcutMenuName" autocomplete="off" placeholder="Menu name"
+                                   class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">Menu Path</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="shortcutMenuPath" autocomplete="off" placeholder="Menu Path"
+                                   class="layui-input">
+                        </div>
+                    </div>
+                    <!-- hidden -->
+                    <input type="text" name="shortcutMenuId" hidden="hidden"/>
+                    <input type="text" name="shortcutMenuParentId" hidden="hidden"/>
+                    <input type="text" name="createTime" hidden="hidden"/>
+                    <input type="text" name="updateTime" hidden="hidden"/>
+                    <!-- treeId，for updating HTML-->
+                    <input type="text" name="treeId" hidden="hidden"/>
+
+                    <div class="layui-form-item">
+                        <div class="layui-input-block">
+                            <a class="layui-btn" onclick="shortcutMenuFormSave()">Save</a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+<!-- js -->
+<script th:src="@{/user/js/shortcutmenu.js}"></script>
+</html>

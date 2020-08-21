@@ -1,0 +1,75 @@
+<!DOCTYPE>
+
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Real-time logging</title>
+    <script th:replace="common/head::static"></script>
+</head>
+<body>
+<!-- title -->
+<h1 style="text-align: center;">Real-time logging</h1>
+<h6 style="text-align: center;">Refresh every one second</h6>
+
+<!-- Display -->
+<div id="loggingText" contenteditable="true"
+     style="width:100%;height: 500px;background-color: ghostwhite; overflow: auto;"></div>
+
+<!-- Action -->
+<div style="text-align: center;">
+    <button onclick="$('#loggingText').text('')" style="color: green; height: 35px;">Clear Screen</button>
+    <button onclick="$('#loggingText').animate({scrollTop:$('#loggingText')[0].scrollHeight});"
+            style="color: green; height: 35px;">Scroll to the bottom
+    </button>
+    <button onclick="if(window.loggingAutoBottom){$(this).text('开启自动滚动');}else{$(this).text('关闭自动滚动');};window.loggingAutoBottom = !window.loggingAutoBottom"
+            style="color: green; height: 35px; ">Auto scroll
+    </button>
+</div>
+</body>
+<script th:inline="javascript">
+    let port = [[${port}]];// port
+
+    //websocket object
+    let websocket = null;
+
+    // Whether WebSocket is supported by current browser
+    if ('WebSocket' in window) {
+        // Get the ip/domain name dynamically
+        let hostname = window.location.hostname;
+        port = window.location.port;
+        websocket = new WebSocket("ws://"+hostname+":" + port + "/websocket/logging");
+    } else {
+        console.error("WebSocket is not supported");
+    }
+
+    // Connection error
+    websocket.onerror = function (e) {
+        console.error("Error: WebSocket Connection");
+    };
+
+    // Connect successfully
+    websocket.onopen = function () {
+        console.log("WebSocket Connects successfully")
+    };
+
+    // method when receives message
+    websocket.onmessage = function (event) {
+        if (event.data) {
+
+            // logging content
+            let $loggingText = $("#loggingText");
+            $loggingText.append(event.data);
+
+            // auto scroll?
+            if (window.loggingAutoBottom) {
+                $loggingText.scrollTop($loggingText[0].scrollHeight);
+            }
+        }
+    }
+
+    // Close the connection
+    websocket.onclose = function () {
+        console.log("WebSocket connection has been closed")
+    };
+</script>
+</html>

@@ -1,0 +1,146 @@
+<!DOCTYPE>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>System Monitor</title>
+
+    <script th:replace="common/head::static"></script>
+    <style>
+        .layui-card-body {
+            height: 100px;
+        }
+    </style>
+</head>
+<body>
+<!-- Title -->
+<h1 style="text-align: center;">System Environment Monitor</h1>
+<h6 style="text-align: center;">Refresh per second</h6>
+
+<div style="padding: 20px; background-color: #F2F2F2;">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-md6">
+            <div class="layui-card">
+                <div class="layui-card-header">System Information</div>
+                <div class="layui-card-body">
+                    <p>Operating System:<span id="os"></span></p>
+                    <p>Java Version:<span id="jvmJavaVersion"></span></p>
+                    <p>Application Start Time:<span id="runTime"></span></p>
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-md6">
+            <div class="layui-card">
+                <div class="layui-card-header">CPU</div>
+                <div class="layui-card-body">
+                    <p>CPU Info:<span id="cpuInfo"></span></p>
+                    <p>CPU Usage Rate:<span id="cpuUseRate">0%</span></p>
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-col-md6">
+            <div class="layui-card">
+                <div class="layui-card-header">RAM</div>
+                <div class="layui-card-body">
+                    <p>Total Memory:<span id="ramTotal">0（G）</span></p>
+                    <p>Used Memory:<span id="ramUsed">0（G）</span></p>
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-md6">
+            <div class="layui-card">
+                <div class="layui-card-header">Disk</div>
+                <div class="layui-card-body">
+                    <p>Total Disk:<span id="diskTotal">0（G）</span></p>
+                    <p>Used Disk:<span id="diskUsed">0（G）</span></p>
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-col-md6">
+            <div class="layui-card">
+                <div class="layui-card-header">JVM Heap Memory</div>
+                <div class="layui-card-body">
+                    <p>Initial Size:<span id="jvmHeapInit">0（M）</span></p>
+                    <p>Maximum Available:<span id="jvmHeapMax">0（M）</span></p>
+                    <p>Used:<span id="jvmHeapUsed">0（M）</span></p>
+                    <p>Committed:<span id="jvmHeapCommitted">0（M）</span></p>
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-md6">
+            <div class="layui-card">
+                <div class="layui-card-header">JVM Non-heap Memory</div>
+                <div class="layui-card-body">
+                    <p>Initial Size:<span id="jvmNonHeapInit">0（M）</span></p>
+                    <p>Maximum Available:<span id="jvmNonHeapMax">0（M）</span></p>
+                    <p>Used<span id="jvmNonHeapUsed">0（M）</span></p>
+                    <p>Committed:<span id="jvmNonHeapCommitted">0（M）</span></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+<script th:inline="javascript">
+    let port = [[${port}]];// port
+
+    //websocket object
+    let websocket = null;
+
+    // whether current browser supports WebSocket
+    if ('WebSocket' in window) {
+        // Get ip/domain name dynamically
+        let hostname = window.location.hostname;
+        port = window.location.port;
+        websocket = new WebSocket("ws://"+hostname+":" + port + "/websocket/monitor");
+    } else {
+        console.error("WebSocket is not supported");
+    }
+
+    // when connection fails
+    websocket.onerror = function (e) {
+        console.error("Error: WebSocket Connection");
+    };
+
+    // when connection successes
+    websocket.onopen = function () {
+        console.log("Success: WebSocket Connected")
+    };
+
+    // when receives message
+    websocket.onmessage = function (event) {
+        if (event.data) {
+            let monitonJson = JSON.parse(event.data);
+            $("#os").text(monitonJson.os);
+            $("#runTime").text(monitonJson.runTime);
+            $("#jvmJavaVersion").text(monitonJson.jvmJavaVersion);
+
+            $("#jvmHeapInit").text(monitonJson.jvmHeapInit  + "（M）");
+            $("#jvmHeapMax").text(monitonJson.jvmHeapMax  + "（M）");
+            $("#jvmHeapUsed").text(monitonJson.jvmHeapUsed  + "（M）");
+            $("#jvmHeapCommitted").text(monitonJson.jvmHeapCommitted  + "（M）");
+
+            $("#jvmNonHeapInit").text(monitonJson.jvmNonHeapInit  + "（M）");
+            $("#jvmNonHeapMax").text(monitonJson.jvmNonHeapMax  + "（M）");
+            $("#jvmNonHeapUsed").text(monitonJson.jvmNonHeapUsed  + "（M）");
+            $("#jvmNonHeapCommitted").text(monitonJson.jvmNonHeapCommitted  + "（M）");
+
+
+            $("#cpuUseRate").text(monitonJson.cpuUseRate + "%");
+            $("#cpuInfo").text(monitonJson.cpuInfo);
+
+            $("#ramTotal").text(monitonJson.ramTotal + "（G）");
+            $("#ramUsed").text(monitonJson.ramUsed + "（G）");
+
+            $("#diskTotal").text(monitonJson.diskTotal + "（G）");
+            $("#diskUsed").text(monitonJson.diskUsed + "（G）");
+        }
+    }
+
+    // Close the connection
+    websocket.onclose = function () {
+        console.log("Closed: WebSocket Connection")
+    };
+</script>
+</html>

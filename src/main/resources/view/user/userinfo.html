@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <script th:replace="common/head::static"></script>
+    <link th:href="@{/user/css/user.css}" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+<div class="layui-row layui-col-space15">
+    <!-- Action form -->
+    <div class="layui-col-md12">
+        <div class="layui-card">
+            <div class="layui-card-header">User Detail</div>
+            <div class="layui-card-body">
+                <form id="userForm" class="layui-form layui-form-pane">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">User Name</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="userName" th:value="${user.userName}" autocomplete="off"
+                                   placeholder="User Name"
+                                   class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">Login Nmae</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="loginName" th:value="${user.loginName}" autocomplete="off"
+                                   placeholder="Login Name"
+                                   class="layui-input" readonly="readonly" disabled="disabled">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">Password</label>
+                        <div class="layui-input-block">
+                            <a class="layui-btn layui-btn-sm" onclick="updatePassword()">Update Password</a>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">Allowed to login</label>
+                        <div class="layui-input-block">
+                            <input type="radio" name="valid" th:attr="checked=${user.valid == 'Y' ? true : false}"
+                                   value="Y" title="Yes" readonly="readonly" disabled="disabled">
+                            <input type="radio" name="valid" th:attr="checked=${user.valid == 'N' ? true : false}"
+                                   value="N" title="No" readonly="readonly" disabled="disabled">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">Allow to be online the same time</label>
+                        <div class="layui-input-block">
+                            <input type="radio" name="limitMultiLogin"
+                                   th:attr="checked=${user.limitMultiLogin == 'Y' ? true : false}" value="Y" title="Yes"
+                                   readonly="readonly" disabled="disabled">
+                            <input type="radio" name="limitMultiLogin"
+                                   th:attr="checked=${user.limitMultiLogin == 'N' ? true : false}" value="N" title="No"
+                                   readonly="readonly"  disabled="disabled">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">Banned IP</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="limitedIp" th:value="${user.limitedIp}" autocomplete="off"
+                                   placeholder="Banned IP(use comma to separate)"
+                                   class="layui-input" readonly="readonly" disabled="disabled">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <div class="layui-inline">
+                            <label class="layui-form-label">Expired time</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="expiredTime" th:value="${user.expiredTime}" autocomplete="off"
+                                       class="layui-input" readonly="readonly" disabled="disabled">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <div class="layui-inline">
+                            <label class="layui-form-label">Last time change password</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="lastChangePwdTime" th:value="${user.lastChangePwdTime}"
+                                       autocomplete="off" class="layui-input"
+                                       readonly="readonly" disabled="disabled">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">Create time</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="createTime" th:value="${user.createTime}" autocomplete="off"
+                                   placeholder="Create time"
+                                   class="layui-input" readonly="readonly" disabled="disabled">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">Update time</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="updateTime" th:value="${user.updateTime}" autocomplete="off"
+                                   placeholder="Update time"
+                                   class="layui-input" readonly="readonly" disabled="disabled">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <div class="layui-input-block">
+                            <a class="layui-btn" onclick="userFormSave()">Save</a>
+                        </div>
+                    </div>
+                    <!-- Hidden -->
+                    <input type="text" name="userId" hidden="hidden"/>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+<!-- js -->
+<script th:src="@{/user/js/userinfo.js}"></script>
+</html>

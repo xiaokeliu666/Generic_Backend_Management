@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <script th:replace="common/head::static"></script>
+    <link th:href="@{/sys/authority/css/authority.css}" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+<div class="layui-row layui-col-space15">
+    <!-- Tree -->
+    <div class="layui-col-md6">
+        <div class="layui-card">
+            <div class="layui-card-header">Permission List</div>
+            <div class="layui-card-body">
+                <!-- table -->
+                <table class="layui-hide" id="authorityTable" lay-filter="test"></table>
+                <!-- template -->
+                <script type="text/html" id="authorityTableToolbarDemo">
+                    <div class="layui-btn-container">
+                        <button class="layui-btn layui-btn-sm" lay-event="addData">Add</button>
+                        <input type="text" id="queryByAuthorityName" name="queryByAuthorityName" autocomplete="off"
+                               placeholder="Please input the authority" class="layui-input layui-btn-sm">
+                        <button class="layui-btn layui-btn-sm" lay-event="query">Search</button>
+                    </div>
+                </script>
+                <script type="text/html" id="authorityTableBarDemo">
+                    <a class="layui-btn layui-btn-xs" lay-event="edit">Edit</a>
+                    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">Delete</a>
+                </script>
+            </div>
+        </div>
+    </div>
+    <!-- Operation form -->
+    <div class="layui-col-md6">
+        <div class="layui-card">
+            <div class="layui-card-header">Operation form</div>
+            <div class="layui-card-body">
+                <form id="authorityForm" class="layui-form layui-form-pane">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">Authority</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="authorityName" autocomplete="off" placeholder="Start with 'ROLE_' and All Uppercase"
+                                   class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">Valid url, use comma to separate</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="authorityContent" autocomplete="off" placeholder="Valid url, use comma to separate"
+                                   class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">Authority Description</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="authorityRemark" autocomplete="off" placeholder="Authority Description"
+                                   class="layui-input">
+                        </div>
+                    </div>
+
+                    <div class="layui-form-item">
+                        <div class="layui-input-block">
+                            <a class="layui-btn" onclick="authorityFormSave()">Save</a>
+                        </div>
+                    </div>
+                    <!-- hidden -->
+                    <input type="text" name="authorityId" hidden="hidden"/>
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+<!-- js -->
+<script th:src="@{/sys/authority/js/authority.js}"></script>
+</html>
