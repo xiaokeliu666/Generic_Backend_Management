@@ -94,33 +94,32 @@ class IndexController {
     }
 
     /**
-     * 跳转登录页面
+     * Jump to login page
      */
     @GetMapping("loginPage")
     public ModelAndView login(){
         ModelAndView modelAndView = new ModelAndView("login");
 
-        //系统信息
+        //System info
         modelAndView.addObject("sys", SysSettingUtil.getSysSetting());
 
-        //后端公钥
+        //Backend public key
         String publicKey = RsaUtil.getPublicKey();
-        log.info("后端公钥：" + publicKey);
+        log.info("Backend PublicKey:" + publicKey);
         modelAndView.addObject("publicKey", publicKey);
 
         return modelAndView;
     }
 
     /**
-     * 跳转首页
+     * Jump to index
      */
     @GetMapping("")
     public void index1(HttpServletResponse response){
-        //内部重定向
+        // inner redirect
         try {
             response.sendRedirect("/index");
         } catch (IOException e) {
-            //输出到日志文件中
             log.error(ErrorUtil.errorInfoToString(e));
         }
     }
@@ -128,55 +127,55 @@ class IndexController {
     public ModelAndView index(){
         ModelAndView modelAndView = new ModelAndView("index");
 
-        //系统信息
+        // sys info
         modelAndView.addObject("sys", SysSettingUtil.getSysSetting());
 
-        //登录用户
+        // login user
         SysUserVo sysUserVo = sysUserService.findByLoginName(SecurityUtil.getLoginUser().getUsername()).getData();
-        sysUserVo.setPassword(null);//隐藏部分属性
+        sysUserVo.setPassword(null);// hide some attributes
         modelAndView.addObject( "loginUser", sysUserVo);
 
-        //登录用户系统菜单
+        // user system menu
         List<SysMenuVo> menuVoList = sysUserMenuService.findByUserId(sysUserVo.getUserId()).getData();
         modelAndView.addObject("menuList",menuVoList);
 
-        //登录用户快捷菜单
+        // user shortcut menu
         List<SysShortcutMenuVo> shortcutMenuVoList= sysShortcutMenuService.findByUserId(sysUserVo.getUserId()).getData();
         modelAndView.addObject("shortcutMenuList",shortcutMenuVoList);
 
-        //后端公钥
+        // Backend public key
         String publicKey = RsaUtil.getPublicKey();
-        log.info("后端公钥：" + publicKey);
+        log.info("Backend PublicKey" + publicKey);
         modelAndView.addObject("publicKey", publicKey);
         return modelAndView;
     }
 
     /**
-     * 获取验证码图片和文本(验证码文本会保存在HttpSession中)
+     * Get the image and text of captcha (will be stored in HttpSession)
      */
     @RequestMapping("getVerifyCodeImage")
     public void getVerifyCodeImage(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        //设置页面不缓存
+        // no cache
         response.setHeader("Pragma", "no-cache");
         response.setHeader("Cache-Control", "no-cache");
         response.setDateHeader("Expires", 0);
         response.getOutputStream();
         String verifyCode = VerifyCodeImageUtil.generateTextCode(VerifyCodeImageUtil.TYPE_NUM_UPPER, 4, null);
 
-        //将验证码放到HttpSession里面
+        // store the captcha into HttpSession
         request.getSession().setAttribute("verifyCode", verifyCode);
-         log.info("本次生成的验证码为：" + verifyCode + ",已存放到HttpSession中");
+         log.info("Generated Captcha:" + verifyCode + ",already stored in HttpSession");
 
-        //设置输出的内容的类型为JPEG图像
+        // Set the output is jpeg
         response.setContentType("image/jpeg");
         BufferedImage bufferedImage = VerifyCodeImageUtil.generateImageCode(verifyCode, 90, 30, 3, true, Color.WHITE, Color.BLACK, null);
 
-        //写给浏览器
+        // write to the browser
         ImageIO.write(bufferedImage, "JPEG", response.getOutputStream());
     }
 
     /**
-     * 跳转实时系统硬件监控
+     * system monitor
      */
     @GetMapping("monitor")
     public ModelAndView monitor() {
@@ -184,7 +183,7 @@ class IndexController {
     }
 
     /**
-     * 跳转实时日志
+     * real-time logging
      */
     @GetMapping("logging")
     public ModelAndView logging() {

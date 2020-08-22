@@ -1,9 +1,9 @@
 /**
- * 加解密操作简单封装一下
+ * Encryption/decryption
  */
 aesUtil = {
 
-    //获取key，
+    // get key
     genKey : function (length = 16) {
         let random = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
         let str = "";
@@ -13,7 +13,7 @@ aesUtil = {
         return str;
     },
 
-    //加密
+    // Encrypt
     encrypt : function (plaintext,key) {
         if (plaintext instanceof Object) {
             //JSON.stringify
@@ -23,7 +23,7 @@ aesUtil = {
         return encrypted.toString();
     },
 
-    //解密
+    // Decrypt
     decrypt : function (ciphertext,key) {
         let decrypt = CryptoJS.AES.decrypt(ciphertext, CryptoJS.enc.Utf8.parse(key), {mode:CryptoJS.mode.ECB,padding: CryptoJS.pad.Pkcs7});
         let decString = CryptoJS.enc.Utf8.stringify(decrypt).toString();
@@ -35,27 +35,27 @@ aesUtil = {
     }
 };
 rsaUtil = {
-    //RSA 位数，这里要跟后端对应
+    //RSA bits
     bits: 1024,
 
-    //当前JSEncrypted对象
+    // current JSEncrypted object
     thisKeyPair: {},
 
-    //生成密钥对(公钥和私钥)
+    // Generate key pair
     genKeyPair: function (bits = rsaUtil.bits) {
         let genKeyPair = {};
         rsaUtil.thisKeyPair = new JSEncrypt({default_key_size: bits});
 
-        //获取私钥
+        // get private key
         genKeyPair.privateKey = rsaUtil.thisKeyPair.getPrivateKey();
 
-        //获取公钥
+        // get public key
         genKeyPair.publicKey = rsaUtil.thisKeyPair.getPublicKey();
 
         return genKeyPair;
     },
 
-    //公钥加密
+    // public key encryption
     encrypt: function (plaintext, publicKey) {
         if (plaintext instanceof Object) {
             //1、JSON.stringify
@@ -65,7 +65,7 @@ rsaUtil = {
         return rsaUtil.thisKeyPair.encrypt(JSON.stringify(plaintext));
     },
 
-    //私钥解密
+    // private key decryption
     decrypt: function (ciphertext, privateKey) {
         privateKey && rsaUtil.thisKeyPair.setPrivateKey(privateKey);
         let decString = rsaUtil.thisKeyPair.decrypt(ciphertext);
@@ -78,15 +78,15 @@ rsaUtil = {
 };
 
 /**
- * 常用工具方法
+ * utils
  */
 commonUtil = {
     /**
-     * 扩展jquery对象方法
+     * jquery extend
      */
     jqueryFnExtend : function(){
         /**
-         * 拓展表单对象：用于将对象序列化为JSON对象
+         * conver to json
          */
         $.fn.serializeObject = function () {
             var o = {};
@@ -104,10 +104,7 @@ commonUtil = {
             return o;
         };
 
-        /**
-         * 拓展表单对象：表单自动回显
-         * 使用参考：$("#form1").form({"id":"112","username":"ff","password":"111","type":"admin"});
-         */
+
         $.fn.form = function (data) {
             let form = $(this);
             for (let i in data) {
@@ -134,9 +131,7 @@ commonUtil = {
             }
         };
 
-        /**
-         * 拓展jQuery对象：快速AJAX Delete删除
-         */
+
         $.delete = function (url, params, callback) {
             if (!params || typeof params === 'string') {
                 throw new Error('Error Params：' + params);
@@ -145,8 +140,8 @@ commonUtil = {
             $.ajax({
                 url: url,
                 type: "DELETE",
-                contentType: 'application/json',//发送格式（JSON串）
-                data: JSON.stringify(params),//发送参数（JSON串）
+                contentType: 'application/json',
+                data: JSON.stringify(params),
                 success: function (result) {
                     callback && callback(result);
                 }
@@ -154,18 +149,16 @@ commonUtil = {
         };
     },
 
-    /**
-     * 获取当前时间，并格式化输出为：2018-05-18 14:21:46
-     */
+
     getNowTime: function () {
         var time = new Date();
-        var year = time.getFullYear();//获取年
-        var month = time.getMonth() + 1;//或者月
-        var day = time.getDate();//或者天
+        var year = time.getFullYear();
+        var month = time.getMonth() + 1;
+        var day = time.getDate();
 
-        var hour = time.getHours();//获取小时
-        var minu = time.getMinutes();//获取分钟
-        var second = time.getSeconds();//或者秒
+        var hour = time.getHours();
+        var minu = time.getMinutes();
+        var second = time.getSeconds();
         var data = year + "-";
         if (month < 10) {
             data += "0";
@@ -192,11 +185,7 @@ commonUtil = {
         return data;
     },
 
-    /**
-     * 将我们响应的系统菜单数据转换成符合layui的tree结构
-     * @param arrar  旧数据
-     * @returns {Array} 新数据
-     */
+
     updateKeyForLayuiTree: function (arrar) {
         let newArray = [];
         for (let i = 0; i < arrar.length; i++) {
@@ -214,20 +203,16 @@ commonUtil = {
         return newArray
     },
 
-    /**
-     * 在所有系统菜单上勾选用户菜单
-     * @param arrTree
-     * @param userTreeString
-     */
+
     checkedForLayuiTree:function (arrTree, userTreeString) {
         for(let tree of arrTree){
-            //默认全部展开
+
             tree.spread=true;
-            //递归子节点
+
             if(tree.children && tree.children.length > 0){
                 tree.children = this.checkedForLayuiTree(tree.children,userTreeString);
             }else{
-                //是否包含（勾选子节点默认会勾上父节点，如果勾选父节点，默认会全部勾上所有子节点）
+
                 if(userTreeString.search(tree.id) !== -1){
                     tree.checked = true;
                 }
@@ -239,35 +224,19 @@ commonUtil = {
 
 
 
-/* 以下代码统一执行  */
 
-//扩展jquery对象方法
 commonUtil.jqueryFnExtend();
 
-//判断api加密开关
+// api on or off
 if(sessionStorage.getItem('sysApiEncrypt') === "Y"){
-    //获取前端RSA公钥密码、AES的key，并放到window
+    // get frontend rsa public key , aes key to the window
     let genKeyPair = rsaUtil.genKeyPair();
     window.jsPublicKey = genKeyPair.publicKey;
     window.jsPrivateKey = genKeyPair.privateKey;
 
-    //重写ajax加密，并保留原始ajax，命名为_ajax
-    let _ajax = $.ajax;//首先备份下jquery的ajax方法
+    let _ajax = $.ajax;
     $.ajax = function (opt) {
-        //默认值
-        // opt = {
-        //     type: 'post',
-        //     url: url,
-        //     contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
-        //     dataType: 'json',
-        //     data: data,
-        //     success: success,
-        //     error: function (xhr, status, error) {
-        //         console.log("ajax错误！");
-        //     }
-        // };
 
-        //备份opt中error和success方法
         let fn = {
             error: function (XMLHttpRequest, textStatus, errorThrown) {
             },
@@ -281,27 +250,26 @@ if(sessionStorage.getItem('sysApiEncrypt') === "Y"){
             fn.success = opt.success;
         }
 
-        //加密再传输
+        // encrypt and transport
         if (opt.type.toLowerCase() === "post") {
             let data = opt.data;
-            //发送请求之前随机获取AES的key
+            // Get AES key randomly before sending request
             let aesKey = aesUtil.genKey();
             data = {
-                data: aesUtil.encrypt(data, aesKey),//AES加密后的数据
-                aesKey: rsaUtil.encrypt(aesKey, sessionStorage.getItem('javaPublicKey')),//后端RSA公钥加密后的AES的key
-                publicKey: window.jsPublicKey//前端公钥
+                data: aesUtil.encrypt(data, aesKey),// Data after AES encryption
+                aesKey: rsaUtil.encrypt(aesKey, sessionStorage.getItem('javaPublicKey')),//AES Key after backend RSA public key encryption
+                publicKey: window.jsPublicKey// Front end public key
             };
             opt.data = data;
         }
 
-        //扩展增强处理
+
         let _opt = $.extend(opt, {
-            //成功回调方法增强处理
             success: function (data, textStatus) {
                 if (opt.type.toLowerCase() === "post") {
                     data = aesUtil.decrypt(data.data.data, rsaUtil.decrypt(data.data.aesKey, window.jsPrivateKey));
                 }
-                //先获取明文aesKey，再用明文key去解密数据
+                // Get plaintext aes key, then use AES key to decrypt
                 fn.success(data, textStatus);
             }
         });
