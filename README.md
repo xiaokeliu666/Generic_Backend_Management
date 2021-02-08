@@ -1,6 +1,6 @@
 # Generic_Backend_Management
 ## Introduction
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;This is a generic backend management. Its main features include: authority management, menu management, user management, real-time system monitoring, web service encryption and so on.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;This is a generic backend management. Its main features include: authority management, menu management, user management, real-time system monitoring, web service encryption(RAS + AES) and so on.
 ## Tech Stack
 Frontend: Layui
 
